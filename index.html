@@ -3,509 +3,357 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Хочу поесть — каталог заведений Краснодара (MVP)</title>
+<title>Хочу поесть — главная</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=PT+Sans:wght@400;700&family=PT+Mono:wght@400;700&family=Marck+Script&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=PT+Mono:wght@400;700&display=swap');
 
   :root {
-    --paper: #ede6d8;
-    --paper-raised: #f6f2e8;
-    --paper-sunk: #e2d9c6;
-    --ink: #26211a;
-    --ink-soft: #5b5346;
-    --ink-faint: #837a68;
-    --line: rgba(38,33,26,0.18);
-    --line-strong: rgba(38,33,26,0.34);
-    --accent: #c85a24;
-    --accent-deep: #96431b;
-    --accent-soft: rgba(200,90,36,0.13);
-    --teal: #1f4a47;
-    --teal-soft: rgba(31,74,71,0.10);
-    --shadow: 0 1px 0 rgba(38,33,26,0.06), 0 10px 22px -14px rgba(38,33,26,0.30);
+    --cream: #f4ece0;
+    --ink: #17110d;
+    --accent: #d99a3a;
   }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --paper: #1b1611; --paper-raised: #241d16; --paper-sunk: #14100c;
-      --ink: #ede6d8; --ink-soft: #c7bda8; --ink-faint: #8f8570;
-      --line: rgba(237,230,216,0.15); --line-strong: rgba(237,230,216,0.28);
-      --accent: #e07d3f; --accent-deep: #f0a06a; --accent-soft: rgba(224,125,63,0.16);
-      --teal: #5aada6; --teal-soft: rgba(90,173,166,0.14);
-      --shadow: 0 1px 0 rgba(0,0,0,0.4), 0 12px 26px -14px rgba(0,0,0,0.55);
-    }
-  }
-  :root[data-theme="dark"] {
-    --paper: #1b1611; --paper-raised: #241d16; --paper-sunk: #14100c;
-    --ink: #ede6d8; --ink-soft: #c7bda8; --ink-faint: #8f8570;
-    --line: rgba(237,230,216,0.15); --line-strong: rgba(237,230,216,0.28);
-    --accent: #e07d3f; --accent-deep: #f0a06a; --accent-soft: rgba(224,125,63,0.16);
-    --teal: #5aada6; --teal-soft: rgba(90,173,166,0.14);
-    --shadow: 0 1px 0 rgba(0,0,0,0.4), 0 12px 26px -14px rgba(0,0,0,0.55);
-  }
-
   * { box-sizing: border-box; }
-  html, body { position: relative; }
+  html, body { height: 100%; }
   body {
-    margin: 0; background: var(--paper); color: var(--ink);
-    font-family: 'PT Sans', Arial, sans-serif; font-size: 16px; line-height: 1.5;
+    margin: 0; background: var(--ink); color: var(--cream);
+    font-family: 'Montserrat', sans-serif;
     -webkit-font-smoothing: antialiased;
+    overflow: hidden; touch-action: none;
   }
-  body::before {
-    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 50;
-    opacity: 0.05; mix-blend-mode: multiply;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  }
-  .mono { font-family: 'PT Mono', ui-monospace, monospace; }
-  .script { font-family: 'Marck Script', cursive; }
-  h1, h2, h3 { font-family: 'Oswald', sans-serif; text-wrap: balance; margin: 0; }
+  h1 { margin: 0; text-wrap: balance; }
+  .frame { position: fixed; inset: 14px; border: 1.5px solid rgba(244,236,224,0.28); pointer-events: none; z-index: 95; }
 
-  /* ---------- masthead ---------- */
-  header.masthead {
-    border-bottom: 3px double var(--line-strong);
-    padding: 22px 20px 26px;
+  .stage { position: relative; width: 100%; height: 100vh; overflow: hidden; }
+
+  /* ---------- three windows, each masked to its own torn hole, each cycling its own 3 clips ---------- */
+  .bg-video { position: absolute; inset: 0; z-index: 0; background: #2a0f14; }
+
+  /* the mask wrapper stays full-viewport so mask-size:cover aligns pixel-for-pixel with the paper overlay */
+  .hole-window {
+    position: absolute; inset: 0; overflow: hidden;
+    -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+    -webkit-mask-size: cover; mask-size: cover;
+    -webkit-mask-position: center; mask-position: center;
   }
-  .masthead-inner { max-width: 1180px; margin: 0 auto; }
-  .eyebrow-row {
-    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px 18px;
-    font-family: 'PT Mono', monospace; font-size: 11.5px; letter-spacing: 0.06em;
-    text-transform: uppercase; color: var(--ink-faint); margin-bottom: 18px;
-    padding-bottom: 14px; border-bottom: 1px solid var(--line);
+  .hole-window-right     { -webkit-mask-image: url('assets/overlays/hole-right.png');     mask-image: url('assets/overlays/hole-right.png'); }
+  .hole-window-upperleft { -webkit-mask-image: url('assets/overlays/hole-upperleft.png'); mask-image: url('assets/overlays/hole-upperleft.png'); }
+  .hole-window-bottom    { -webkit-mask-image: url('assets/overlays/hole-bottom.png');    mask-image: url('assets/overlays/hole-bottom.png'); }
+
+  /* each video is sized/positioned smaller than the viewport and centered on its own hole,
+     so more of the clip's frame is visible through the tear instead of an extreme crop */
+  .hw-video {
+    position: absolute; object-fit: cover; object-position: center 35%; transform: translate(-50%, -50%);
+    opacity: 0; transition: opacity 1.3s ease-in-out;
   }
-  .eyebrow-row span b { color: var(--teal); }
-  .wordmark-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+  .hw-video.active { opacity: 1; }
+
+  /* box must be at least as tall/wide as the actual tear it sits behind (checked against
+     each hole's real bbox: right 30.1%x70.8%, upperleft 41.6%x45.5%, bottom 32.8%x34.0%
+     of the source canvas) plus a safety margin — undershooting leaves a flat gap of bare
+     background showing through part of the tear instead of footage */
+  .hole-window-right     .hw-video { left: 82%; top: 46%; width: 46%; height: 86%; }
+  .hole-window-upperleft .hw-video { left: 22%; top: 28%; width: 54%; height: 58%; }
+  .hole-window-bottom    .hw-video { left: 49%; top: 75%; width: 44%; height: 46%; }
+
+  /* ---------- torn burgundy paper, genuinely transparent tears, footage shows through ---------- */
+  .tear-overlay {
+    position: absolute; inset: 0; z-index: 1;
+    background-image: url('assets/overlays/tear-overlay-8-final.webp');
+    background-size: cover; background-position: center;
+    pointer-events: none;
+  }
+
+  /* ---------- hero text: fades out cleanly as one block before the menu appears ---------- */
+  .hero-copy {
+    position: absolute; inset: 0; z-index: 3; display: flex; flex-direction: column; align-items: center;
+    padding: 6vh 24px; text-align: center;
+    pointer-events: none;
+    opacity: 1; transition: opacity 1.8s ease;
+  }
+  .hero-copy.fade-out { opacity: 0; }
+  .eyebrow {
+    font-family: 'PT Mono', monospace; font-size: 11.5px; letter-spacing: 0.09em; text-transform: uppercase;
+    color: var(--cream); opacity: 0.75; display: flex; gap: 12px; align-items: center;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.6);
+  }
+  .eyebrow b { color: var(--accent); opacity: 1; }
+
+  .hero-bottom { margin-top: auto; margin-bottom: auto; display: flex; flex-direction: column; align-items: center; }
+
+  .text-scrim { position: relative; }
+  .text-scrim::before {
+    content: "";
+    position: absolute;
+    inset: -20% -18%;
+    background: radial-gradient(ellipse 50% 50% at 50% 50%,
+      rgba(0,0,0,0.42) 0%, rgba(0,0,0,0.26) 42%, rgba(0,0,0,0.1) 68%, rgba(0,0,0,0) 90%);
+    z-index: -1;
+    pointer-events: none;
+  }
+
   .wordmark {
-    font-size: clamp(44px, 9vw, 92px); font-weight: 700; text-transform: uppercase;
-    letter-spacing: -0.01em; line-height: 0.92; color: var(--ink);
-  }
-  .wordmark span { color: var(--accent); }
-  .corner-label {
-    font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: 0.05em;
-    text-transform: uppercase; color: var(--teal); text-align: right; white-space: nowrap;
-    padding-bottom: 8px;
+    font-size: clamp(38px, 8vw, 84px); font-weight: 500; text-transform: uppercase;
+    letter-spacing: 0.08em; line-height: 1.05; color: var(--cream);
+    text-shadow: 0 4px 24px rgba(0,0,0,0.55);
   }
   .tagline {
-    font-size: 17px; color: var(--ink-soft); max-width: 46ch; margin-top: 10px;
-    font-style: italic;
-  }
-  .cta-row {
-    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px 20px;
-    margin-top: 20px; padding-top: 14px; border-top: 1px solid var(--line);
-    font-family: 'PT Mono', monospace; font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase;
-  }
-  .cta-row .l { color: var(--accent); }
-  .cta-row .r { color: var(--ink-faint); }
-
-  /* ---------- layout ---------- */
-  .shell { max-width: 1180px; margin: 0 auto; padding: 30px 20px 90px; position: relative; z-index: 1; }
-  .layout { display: grid; grid-template-columns: 270px minmax(0,1fr); gap: 30px; align-items: start; }
-  @media (max-width: 860px) { .layout { grid-template-columns: 1fr; } }
-
-  .facets {
-    position: sticky; top: 20px;
-    display: flex; flex-direction: column; gap: 20px;
-    background: var(--paper-raised); border: 1px solid var(--line-strong);
-    padding: 20px; max-height: calc(100vh - 40px); overflow-y: auto;
-  }
-  @media (max-width: 860px) { .facets { position: static; max-height: none; } }
-  .facets-title {
-    font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
-    color: var(--ink); display: flex; align-items: center; gap: 8px; margin-bottom: 4px;
-    padding-bottom: 10px; border-bottom: 1px dashed var(--line-strong);
-  }
-  .facets-title::before { content: "§"; color: var(--accent); font-family: 'Oswald', sans-serif; }
-  .facet-group { display: flex; flex-direction: column; gap: 9px; }
-  .facet-label { font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); font-weight: 700; font-family: 'PT Mono', monospace; }
-  .chip-row { display: flex; flex-wrap: wrap; gap: 7px; }
-  .chip {
-    font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: 0.02em;
-    border: 1px dashed var(--line-strong); background: transparent;
-    color: var(--ink-soft); padding: 6px 11px; cursor: pointer; user-select: none;
-    transition: all .12s ease; text-transform: uppercase;
-  }
-  .chip:hover { border-color: var(--accent); color: var(--ink); border-style: solid; }
-  .chip.active { background: var(--accent); border-color: var(--accent); border-style: solid; color: var(--paper-raised); font-weight: 700; }
-  .reset-btn {
-    font-family: 'PT Mono', monospace; font-size: 11.5px; color: var(--teal);
-    background: none; border: none; cursor: pointer; text-align: left; padding: 0;
-    text-decoration: underline; text-underline-offset: 3px; text-transform: uppercase; letter-spacing: 0.04em;
+    font-weight: 400; letter-spacing: 0.01em;
+    font-size: clamp(13.5px, 1.5vw, 16px); color: var(--accent); opacity: 0.95;
+    max-width: 38ch; margin: 14px auto 0; text-align: center;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.6);
   }
 
-  .results-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 20px; gap: 12px; flex-wrap: wrap; }
-  .count { font-family: 'PT Mono', monospace; font-size: 12.5px; color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.04em; }
-  .count b { color: var(--accent); font-size: 15px; }
+  .corners {
+    position: absolute; left: 34px; right: 34px; bottom: 24px; z-index: 4;
+    display: flex; justify-content: space-between;
+    font-family: 'PT Mono', monospace; font-size: 10.5px; letter-spacing: 0.07em; text-transform: uppercase;
+    color: var(--cream); opacity: 0.6; text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+  }
+  .corners .l { color: var(--accent); opacity: 1; }
 
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
-
-  .entry {
-    background: var(--paper-raised); border: 1px solid var(--line-strong);
-    padding: 18px 20px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 9px;
+  /* ---------- menu (revealed, same footage behind) ---------- */
+  .menu-layer {
+    position: absolute; inset: 0; z-index: 2;
+    background: linear-gradient(180deg, rgba(23,17,13,0.15) 0%, rgba(23,17,13,0.55) 55%, rgba(23,17,13,0.88) 100%);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px;
+    opacity: 0; pointer-events: none;
+    transition: opacity 1.1s ease-in-out;
+    perspective: 1000px;
+  }
+  .back {
+    position: absolute; top: 30px; left: 34px;
+    font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--cream); background: none; border: none; cursor: pointer; opacity: 0.75;
+  }
+  .back:hover { opacity: 1; }
+  .menu-eyebrow {
+    font-family: 'PT Mono', monospace; font-size: 11.5px; letter-spacing: 0.09em; text-transform: uppercase;
+    color: var(--cream); opacity: 0.6; margin-bottom: 24px;
+  }
+  .menu-list {
+    display: flex; flex-direction: column; gap: 8px; width: min(92vw, 480px);
+    transform-style: preserve-3d; transition: transform .15s ease-out;
+  }
+  .menu-item {
     position: relative;
+    display: flex; align-items: baseline; gap: 16px; padding: 15px 18px;
+    background: rgba(23,17,13,0.55); backdrop-filter: blur(6px); border: 1px solid rgba(244,236,224,0.16);
+    transition: background .18s ease, padding-left .18s ease, box-shadow .5s ease,
+      transform 1.1s cubic-bezier(.22,1,.36,1), opacity 1.1s cubic-bezier(.22,1,.36,1);
+    text-decoration: none; cursor: pointer;
   }
-  .entry-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
-  .entry-num { font-family: 'PT Mono', monospace; font-size: 11px; color: var(--ink-faint); }
-  .entry h3 { font-size: 19px; font-weight: 600; color: var(--ink); line-height: 1.2; margin-top: 2px; }
-  .badge-award {
-    font-family: 'PT Mono', monospace; font-size: 10px; color: var(--teal);
-    border: 1px solid var(--teal); padding: 3px 7px;
-    white-space: nowrap; font-weight: 700; text-transform: uppercase;
-    transform: rotate(-2deg); flex-shrink: 0;
-  }
-  .entry .cuisine { font-size: 13px; color: var(--accent-deep); font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; }
-  .entry .addr, .entry .price { font-family: 'PT Mono', monospace; font-size: 12px; color: var(--ink-faint); }
-  .tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
-  .tag {
-    font-family: 'PT Mono', monospace; font-size: 10.5px; color: var(--ink-soft);
-    border: 1px solid var(--line-strong); padding: 3px 8px; text-transform: uppercase;
-  }
-  .tag.diet { color: var(--teal); border-color: var(--teal); background: var(--teal-soft); }
-  .entry a.map-link {
-    font-size: 12.5px; margin-top: 6px; color: var(--accent-deep); text-decoration-color: var(--line-strong);
-    text-underline-offset: 3px; font-family: 'PT Mono', monospace; text-transform: uppercase; letter-spacing: 0.03em;
+  .menu-item .label { font-weight: 600; font-size: clamp(19px, 3.2vw, 27px); letter-spacing: 0.02em; text-transform: uppercase; flex: 1; text-align: left; color: var(--cream); }
+  .menu-item .soon { font-family: 'PT Mono', monospace; font-size: 10.5px; color: var(--cream); opacity: 0.5; text-transform: uppercase; }
+  .menu-item:hover {
+    background: rgba(23,17,13,0.72); padding-left: 22px;
+    box-shadow: 0 0 36px rgba(217,154,58,0.45), 0 0 70px rgba(217,154,58,0.2);
   }
 
-  .empty { padding: 50px 20px; text-align: center; color: var(--ink-faint); font-family: 'Marck Script', cursive; font-size: 22px; }
-
-  footer.note {
-    max-width: 1180px; margin: 50px auto 0; padding: 24px 20px 0; font-size: 12.5px;
-    color: var(--ink-faint); border-top: 1px dashed var(--line-strong); font-family: 'PT Mono', monospace;
-    display: flex; flex-direction: column; gap: 14px;
+  /* hover: two golden lines trace the border starting from the top-left corner —
+     one running right-then-down, the other down-then-right — meeting at the
+     bottom-right corner once both finish, over ~0.3s */
+  .mi-border { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+  .mi-line {
+    fill: none; stroke: var(--accent); stroke-width: 1.5px; vector-effect: non-scaling-stroke;
+    stroke-dasharray: 1 1; stroke-dashoffset: 1;
+    transition: stroke-dashoffset .3s linear;
   }
-  .barcode { display: flex; gap: 2px; align-items: flex-end; height: 26px; opacity: 0.5; }
-  .barcode i { display: block; background: var(--ink); width: 2px; }
+  .menu-item:hover .mi-line { stroke-dashoffset: 0; }
+
+  /* clean staggered fade-up: each row is its own smooth 0%->100% opacity fade with a gentle
+     rise, triggered a clear step after the previous one — reads as distinct steps, never a
+     sudden pop, whole sequence lands in ~2.3s.
+     The per-row entrance delay is applied ONLY to transform/opacity, spelled out per
+     property rather than as a bare `transition-delay` override — a bare override applies
+     its one value to every transitioned property (background, box-shadow, ...), which was
+     silently delaying rows 2-4's hover glow by their entrance delay too (row 4 effectively
+     took 1.45s+ to light up and felt broken). background/padding-left/box-shadow keep a
+     flat 0s delay on every row so hover response is identical regardless of entrance order. */
+  .menu-item { transform: translateY(18px) translateZ(var(--z, 0px)); opacity: 0; }
+  .menu-layer.in .menu-item {
+    transform: translateY(0) translateZ(var(--z, 0px)); opacity: 1;
+    transition: background .18s ease 0s, padding-left .18s ease 0s, box-shadow .5s ease 0s,
+      transform 1.1s cubic-bezier(.22,1,.36,1) var(--enter-delay, 0s),
+      opacity 1.1s cubic-bezier(.22,1,.36,1) var(--enter-delay, 0s);
+  }
+  .menu-layer.in .menu-item:nth-child(1) { --enter-delay: .1s; }
+  .menu-layer.in .menu-item:nth-child(2) { --enter-delay: .55s; }
+  .menu-layer.in .menu-item:nth-child(3) { --enter-delay: 1s; }
+  .menu-layer.in .menu-item:nth-child(4) { --enter-delay: 1.45s; }
+
+  /* plate + layers: each row sits at a slightly different resting depth, so tilting
+     the whole list (via JS below) reveals a real stack of cards, not a flat sheet.
+     Kept entirely non-negative — a negative translateZ here (rows pushed behind the
+     rest-plane) broke real click/hover hit-testing on those rows in testing, so the
+     whole range sits at or in front of zero instead. */
+  .menu-item:nth-child(1) { --z: 10px; }
+  .menu-item:nth-child(2) { --z: 6px; }
+  .menu-item:nth-child(3) { --z: 3px; }
+  .menu-item:nth-child(4) { --z: 0px; }
+
 </style>
 </head>
 <body>
 
-<header class="masthead">
-  <div class="masthead-inner">
-    <div class="eyebrow-row">
-      <span>Полевые заметки <b>·</b> Краснодар</span>
-      <span>Выпуск 01 <b>·</b> 15 мест <b>·</b> 21.08.2026</span>
+<div class="frame"></div>
+
+<div class="stage" id="stage">
+  <div class="bg-video" id="bgVideo">
+    <div class="hole-window hole-window-right" data-start="0">
+      <video class="hw-video" muted playsinline preload="auto"></video>
+      <video class="hw-video" muted playsinline preload="auto"></video>
     </div>
-    <div class="wordmark-row">
-      <h1 class="wordmark">Хочу <span>поесть</span></h1>
-      <div class="corner-label">не список<br>всех подряд</div>
+    <div class="hole-window hole-window-upperleft" data-start="3">
+      <video class="hw-video" muted playsinline preload="auto"></video>
+      <video class="hw-video" muted playsinline preload="auto"></video>
     </div>
-    <p class="tagline">Точный подбор заведения под то, что вам нужно сейчас — кухня, бюджет, атмосфера и мелочи вроде веранды или детской зоны, которые обычно нигде не спросишь разом.</p>
-    <div class="cta-row">
-      <span class="l">↓ выбрать фильтр</span>
-      <span class="r">Краснодар · черновик проекта</span>
+    <div class="hole-window hole-window-bottom" data-start="7">
+      <video class="hw-video" muted playsinline preload="auto"></video>
+      <video class="hw-video" muted playsinline preload="auto"></video>
     </div>
   </div>
-</header>
+  <div class="tear-overlay"></div>
 
-<div class="shell">
-  <div class="layout">
+  <section class="menu-layer" id="menuLayer">
+    <button class="back" id="backBtn" type="button">← Назад</button>
+    <div class="menu-eyebrow">Основное меню</div>
+    <nav class="menu-list">
+      <a class="menu-item" href="catalog.html"><span class="label">Заведения</span><span class="soon">каталог</span><svg class="mi-border" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path class="mi-line" d="M0,0 L100,0 L100,100" pathLength="1"/><path class="mi-line" d="M0,0 L0,100 L100,100" pathLength="1"/></svg></a>
+      <div class="menu-item"><span class="label">О проекте</span><span class="soon">скоро</span><svg class="mi-border" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path class="mi-line" d="M0,0 L100,0 L100,100" pathLength="1"/><path class="mi-line" d="M0,0 L0,100 L100,100" pathLength="1"/></svg></div>
+      <div class="menu-item"><span class="label">Мы в ВК</span><span class="soon">скоро</span><svg class="mi-border" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path class="mi-line" d="M0,0 L100,0 L100,100" pathLength="1"/><path class="mi-line" d="M0,0 L0,100 L100,100" pathLength="1"/></svg></div>
+      <div class="menu-item"><span class="label">Написать нам</span><span class="soon">скоро</span><svg class="mi-border" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path class="mi-line" d="M0,0 L100,0 L100,100" pathLength="1"/><path class="mi-line" d="M0,0 L0,100 L100,100" pathLength="1"/></svg></div>
+    </nav>
+  </section>
 
-    <aside class="facets">
-      <div class="facets-title">Фильтры</div>
-      <div class="facet-group">
-        <span class="facet-label">Кухня</span>
-        <div class="chip-row" data-facet="cuisine"></div>
+  <div class="hero-copy" id="heroCopy">
+    <div class="eyebrow" id="eyebrowText"><span>Краснодар</span><b>·</b><span>Выпуск 01</span></div>
+    <div class="hero-bottom">
+      <div class="text-scrim">
+        <h1 class="wordmark" id="wordmarkText">Хочу поесть</h1>
+        <p class="tagline" id="taglineText">Точный подбор заведения Краснодара под то, что нужно сейчас</p>
       </div>
-      <div class="facet-group">
-        <span class="facet-label">Бюджет на человека</span>
-        <div class="chip-row" data-facet="price"></div>
-      </div>
-      <div class="facet-group">
-        <span class="facet-label">Диета и меню</span>
-        <div class="chip-row" data-facet="diet"></div>
-      </div>
-      <div class="facet-group">
-        <span class="facet-label">Атмосфера</span>
-        <div class="chip-row" data-facet="atmosphere"></div>
-      </div>
-      <div class="facet-group">
-        <span class="facet-label">Практично</span>
-        <div class="chip-row" data-facet="practical"></div>
-      </div>
-      <button class="reset-btn" id="resetBtn">✕ сбросить всё</button>
-    </aside>
-
-    <main>
-      <div class="results-head">
-        <span class="count" id="count"></span>
-      </div>
-      <div class="grid" id="grid"></div>
-      <div class="empty" id="empty" style="display:none">пусто — снимите пару фильтров</div>
-    </main>
-
+    </div>
   </div>
 
-  <footer class="note">
-    <div class="barcode" aria-hidden="true">
-      <i style="height:100%"></i><i style="height:60%"></i><i style="height:90%"></i><i style="height:40%"></i><i style="height:100%"></i><i style="height:70%"></i><i style="height:50%"></i><i style="height:100%"></i><i style="height:30%"></i><i style="height:80%"></i><i style="height:60%"></i><i style="height:100%"></i><i style="height:45%"></i><i style="height:90%"></i><i style="height:65%"></i>
-    </div>
-    <div>Данные собраны вручную из открытых карточек 2ГИС / Zoon / Flamp на 21.08.2026 — адреса и чек проверены по источникам, часть тегов (веранда / веган-меню / живая музыка / дог-френдли) требует личной проверки на месте перед публикацией. У части заведений чек не подтверждён — они показываются вне фильтра по бюджету. Фотографий заведений пока нет — нет прав использовать чужие снимки без согласования.</div>
-  </footer>
+  <div class="corners"><span class="l">краснодар · 2026</span><span>черновик главной</span></div>
 </div>
 
 <script>
-  const venues = [
-    {
-      name: "Томми Lee",
-      cuisine: "Паназиатская",
-      addr: "Кубанская набережная, 1",
-      price: "₽₽₽ 2000+",
-      priceKey: "3",
-      diet: ["Веган/вег-меню", "Детское меню"],
-      atmosphere: ["Летняя веранда"],
-      practical: ["Wi-Fi"],
-      mapUrl: "https://2gis.ru/krasnodar/firm/3237491513433584",
-      award: false
-    },
-    {
-      name: "Хаяо · Унесённые Азией",
-      cuisine: "Паназиатская / Японская",
-      addr: "ул. Красная, 176/7",
-      price: "₽₽ 1000–3000",
-      priceKey: "2",
-      diet: [],
-      atmosphere: ["Тематический интерьер"],
-      practical: [],
-      mapUrl: "https://2gis.ru/krasnodar/firm/70000001069229613",
-      award: false
-    },
-    {
-      name: "Сыроварня",
-      cuisine: "Итальянская",
-      addr: "ул. Красная, 60",
-      price: "₽₽₽ 1700–3000",
-      priceKey: "3",
-      diet: [],
-      atmosphere: [],
-      practical: [],
-      mapUrl: "https://2gis.ru/krasnodar/firm/70000001046694567",
-      award: false
-    },
-    {
-      name: "Дон Базилио",
-      cuisine: "Итальянская (пицца)",
-      addr: "ТЦ Сити Центр, ул. Индустриальная, 2",
-      price: "₽ ~1000",
-      priceKey: "1",
-      diet: [],
-      atmosphere: [],
-      practical: ["Банкеты"],
-      mapUrl: "https://otdih.nakubani.ru/trattoria-don-bazilio/",
-      award: false
-    },
-    {
-      name: "Джимми Чу",
-      cuisine: "Паназиатская",
-      addr: "ул. Дальняя, 8к1",
-      price: "₽₽ 1000–3000",
-      priceKey: "2",
-      diet: [],
-      atmosphere: ["Летняя веранда"],
-      practical: ["Банкеты"],
-      mapUrl: "https://2gis.ru/krasnodar/firm/70000001037464303",
-      award: false
-    },
-    {
-      name: "Кубана Тоскана",
-      cuisine: "Итальянская (пицца)",
-      addr: "ул. Пашковская, 84",
-      price: "₽₽ 1000–3000",
-      priceKey: "2",
-      diet: [],
-      atmosphere: [],
-      practical: ["Парковка", "Доставка"],
-      mapUrl: "https://2gis.ru/krasnodar/firm/70000001054595057",
-      award: false
-    },
-    {
-      name: "Птичка-Невеличка",
-      cuisine: "Паназиатская / Европейская",
-      addr: "Александровский бульвар, ул. Красная, 133а",
-      price: "₽₽ —",
-      priceKey: "2",
-      diet: [],
-      atmosphere: ["Летняя веранда", "Живая музыка"],
-      practical: ["Детская зона"],
-      mapUrl: "https://2gis.ru/krasnodar/firm/70000001042220480",
-      award: "Лучший ресторан 2023"
-    },
-    {
-      name: "Дэда",
-      cuisine: "Грузинская",
-      addr: "ул. Яна Полуяна, 47/2",
-      price: "₽₽₽ 2000",
-      priceKey: "3",
-      diet: ["Веган/вег-меню", "Детское меню"],
-      atmosphere: ["VIP-зал", "Летняя веранда"],
-      practical: [],
-      mapUrl: "https://2gis.ru/krasnodar/firm/70000001056679323",
-      award: "Лучший ресторан 2022"
-    },
-    {
-      name: "La Кабанья",
-      cuisine: "Ливанская / Арабская",
-      addr: "Кубанская набережная, 39/1",
-      price: "₽₽ 1000–3000",
-      priceKey: "2",
-      diet: [],
-      atmosphere: [],
-      practical: ["Дог-френдли"],
-      mapUrl: "https://2gis.ru/krasnodar/firm/3237490513156802",
-      award: false
-    },
-    {
-      name: "Пицц'н'ролл",
-      cuisine: "Паназиатская / Итальянская",
-      addr: "ул. им. Байбакова Н.К., 14",
-      price: "₽ ~1000",
-      priceKey: "1",
-      diet: [],
-      atmosphere: [],
-      practical: ["Дог-френдли"],
-      mapUrl: "https://ugosti.com/pizznroll",
-      award: false
-    },
-    {
-      name: "Хмельной Повар",
-      cuisine: "Паназиатская / Итальянская (гастробар)",
-      addr: "ул. Невкипелого, 21/3",
-      price: "₽₽ 1100, ланч от 410",
-      priceKey: "2",
-      diet: [],
-      atmosphere: [],
-      practical: ["Дог-френдли", "Бизнес-ланч"],
-      mapUrl: "https://2gis.ru/krasnodar/firm/70000001057850128",
-      award: false
-    },
-    {
-      name: "Диканька",
-      cuisine: "Русская / Кубанская",
-      addr: "ул. Промышленная, 21/1",
-      price: null,
-      priceKey: null,
-      diet: ["Детское меню"],
-      atmosphere: [],
-      practical: ["Детская зона"],
-      mapUrl: "https://2gis.ru/krasnodar/firm/3237490513228586",
-      award: false
-    },
-    {
-      name: "Сельдерей",
-      cuisine: "Здоровое питание / Боулы",
-      addr: "ул. Аэродромная, 4 (БЦ Патриот)",
-      price: "₽ ~950",
-      priceKey: "1",
-      diet: [],
-      atmosphere: [],
-      practical: ["Бизнес-ланч"],
-      mapUrl: "https://2gis.ru/krasnodar/firm/70000001045155760",
-      award: false
-    },
-    {
-      name: "Анор-Анор",
-      cuisine: "Узбекская / Восточная (чайхана)",
-      addr: "ул. Российская, 286/1",
-      price: "₽ ~750",
-      priceKey: "1",
-      diet: ["Халяль"],
-      atmosphere: ["Летняя веранда"],
-      practical: ["Круглосуточно", "Детская зона", "Банкеты"],
-      mapUrl: "https://2gis.ru/krasnodar/firm/70000001048552469",
-      award: false
-    },
-    {
-      name: "Стейк Хаус",
-      cuisine: "Стейки / Грузинская / Европейская",
-      addr: "ул. Октябрьская, 27/1",
-      price: "₽₽ 1000–1700",
-      priceKey: "2",
-      diet: [],
-      atmosphere: ["Терраса с видом"],
-      practical: [],
-      mapUrl: "https://www.restoclub.ru/krd/place/stejk-haus-2",
-      award: false
-    }
+  // ---------- shared pool of 10 clips (each file appears exactly once in this array, so
+  // publishing embeds it exactly once no matter how many <video> tags end up playing it) ----------
+  const CLIP_POOL = [
+    'assets/video/clip1.mp4',
+    'assets/video/clip2.mp4',
+    'assets/video/clip3.mp4',
+    'assets/video/clip4.mp4',
+    'assets/video/clip5.mp4',
+    'assets/video/clip6.mp4',
+    'assets/video/clip7.mp4',
+    'assets/video/clip8.mp4',
+    'assets/video/clip9.mp4',
+    'assets/video/clip10.mp4',
   ];
 
-  const priceLabels = { "1": "₽ до 1200", "2": "₽₽ 1200–2000", "3": "₽₽₽ 2000+" };
-  const facetKeys = ["cuisine", "price", "diet", "atmosphere", "practical"];
-  const state = { cuisine: new Set(), price: new Set(), diet: new Set(), atmosphere: new Set(), practical: new Set() };
+  // ---------- each torn window is a 2-video double buffer: one plays while the other
+  // preloads the next clip from the shared pool, then they crossfade — always a different
+  // clip playing, never a reload flash. Each window starts at its own offset in the pool. ----------
+  (function () {
+    document.querySelectorAll('.hole-window').forEach(win => {
+      const [a, b] = win.querySelectorAll('.hw-video');
+      if (!a || !b) return;
+      let poolIdx = parseInt(win.dataset.start || '0', 10) % CLIP_POOL.length;
+      let active = a, standby = b;
 
-  function uniqueSorted(arr) { return [...new Set(arr)].sort((a,b)=>a.localeCompare(b,'ru')); }
+      active.src = CLIP_POOL[poolIdx];
+      poolIdx = (poolIdx + 1) % CLIP_POOL.length;
+      standby.src = CLIP_POOL[poolIdx];
 
-  function buildFacets() {
-    renderChipRow("cuisine", uniqueSorted(venues.map(v => v.cuisine)), v => v);
-    renderChipRow("price", ["1","2","3"], v => priceLabels[v]);
-    renderChipRow("diet", uniqueSorted(venues.flatMap(v => v.diet)), v => v);
-    renderChipRow("atmosphere", uniqueSorted(venues.flatMap(v => v.atmosphere)), v => v);
-    renderChipRow("practical", uniqueSorted(venues.flatMap(v => v.practical)), v => v);
-  }
+      active.classList.add('active');
+      active.play().catch(() => {});
 
-  function renderChipRow(facetKey, values, labelFn) {
-    const row = document.querySelector(`.chip-row[data-facet="${facetKey}"]`);
-    row.innerHTML = "";
-    values.forEach(val => {
-      const chip = document.createElement("button");
-      chip.className = "chip";
-      chip.type = "button";
-      chip.textContent = labelFn(val);
-      chip.addEventListener("click", () => {
-        if (state[facetKey].has(val)) state[facetKey].delete(val);
-        else state[facetKey].add(val);
-        chip.classList.toggle("active");
-        render();
-      });
-      row.appendChild(chip);
+      function advance() {
+        standby.currentTime = 0;
+        standby.play().catch(() => {});
+        standby.classList.add('active');
+        active.classList.remove('active');
+        [active, standby] = [standby, active];
+        poolIdx = (poolIdx + 1) % CLIP_POOL.length;
+        standby.src = CLIP_POOL[poolIdx];
+      }
+
+      a.addEventListener('ended', advance);
+      b.addEventListener('ended', advance);
     });
+  })();
+
+  const heroCopy = document.getElementById('heroCopy');
+  const menuLayer = document.getElementById('menuLayer');
+
+  // hero text fades out cleanly as one block (1.5-2s), THEN the menu cascades in —
+  // two distinct, sequential beats rather than everything happening at once.
+  // (Intentionally not gated behind prefers-reduced-motion: this is a personal draft
+  // and the motion itself is the explicit point, not an incidental flourish.)
+  const HERO_FADE_MS = 1800;
+  const MENU_CASCADE_MS = 2550; // last menu item's delay(1.45s) + its own duration(1.1s)
+  const totalMs = HERO_FADE_MS + MENU_CASCADE_MS;
+
+  let state = 'idle'; // idle | fading | menu
+
+  function openMenu() {
+    if (state !== 'idle') return;
+    state = 'fading';
+    heroCopy.classList.add('fade-out');
+    setTimeout(() => {
+      state = 'menu';
+      menuLayer.style.opacity = '1';
+      menuLayer.style.pointerEvents = 'auto';
+      menuLayer.classList.add('in');
+    }, HERO_FADE_MS);
   }
 
-  function matches(v) {
-    if (state.cuisine.size && !state.cuisine.has(v.cuisine)) return false;
-    if (state.price.size && v.priceKey && !state.price.has(v.priceKey)) return false;
-    for (const f of state.diet) if (!v.diet.includes(f)) return false;
-    for (const f of state.atmosphere) if (!v.atmosphere.includes(f)) return false;
-    for (const f of state.practical) if (!v.practical.includes(f)) return false;
-    return true;
+  function closeMenu() {
+    if (state === 'idle') return;
+    state = 'idle';
+    heroCopy.classList.remove('fade-out');
+    menuLayer.classList.remove('in');
+    menuLayer.style.pointerEvents = 'none';
+    menuLayer.style.opacity = '0';
+    menuList.style.transform = '';
   }
 
-  function render() {
-    const filtered = venues.filter(matches);
-    const grid = document.getElementById("grid");
-    const empty = document.getElementById("empty");
-    const count = document.getElementById("count");
-    count.innerHTML = `Найдено: <b>${filtered.length}</b> из ${venues.length}`;
-    grid.innerHTML = "";
-    empty.style.display = filtered.length ? "none" : "block";
-    filtered.forEach((v, i) => {
-      const card = document.createElement("div");
-      card.className = "entry";
-      const allTags = [
-        ...v.diet.map(t => `<span class="tag diet">${t}</span>`),
-        ...v.atmosphere.map(t => `<span class="tag">${t}</span>`),
-        ...v.practical.map(t => `<span class="tag">${t}</span>`)
-      ].join("");
-      card.innerHTML = `
-        <div class="entry-head">
-          <div>
-            <div class="entry-num">№ ${String(i + 1).padStart(2, "0")}</div>
-            <h3>${v.name}</h3>
-          </div>
-          ${v.award ? `<span class="badge-award">${v.award}</span>` : ""}
-        </div>
-        <div class="cuisine">${v.cuisine}</div>
-        <div class="addr">${v.addr}</div>
-        <div class="price">${v.price || "чек уточняется"}</div>
-        <div class="tag-row">${allTags}</div>
-        <a class="map-link" href="${v.mapUrl}" target="_blank" rel="noopener">Подробнее →</a>
-      `;
-      grid.appendChild(card);
-    });
-  }
-
-  document.getElementById("resetBtn").addEventListener("click", () => {
-    facetKeys.forEach(k => state[k].clear());
-    document.querySelectorAll(".chip.active").forEach(c => c.classList.remove("active"));
-    render();
+  // ---------- plate + layers: the whole menu list tilts as one rigid plate toward the
+  // cursor, and each row's own resting Z-depth (set in CSS) turns that tilt into a
+  // visible stack of cards rather than a flat sheet rotating ----------
+  const menuList = document.querySelector('.menu-list');
+  const TILT_MAX_DEG = 6;
+  menuLayer.addEventListener('mousemove', (e) => {
+    if (state !== 'menu') return;
+    const r = menuList.getBoundingClientRect();
+    const nx = Math.max(-1, Math.min(1, (e.clientX - (r.left + r.width / 2)) / (r.width / 2)));
+    const ny = Math.max(-1, Math.min(1, (e.clientY - (r.top + r.height / 2)) / (r.height / 2)));
+    menuList.style.transform = `rotateY(${(nx * TILT_MAX_DEG).toFixed(2)}deg) rotateX(${(-ny * TILT_MAX_DEG).toFixed(2)}deg)`;
+  });
+  menuLayer.addEventListener('mouseleave', () => {
+    menuList.style.transform = '';
   });
 
-  buildFacets();
-  render();
+  const CLOSE_MS = 1800 + 400; // matches the hero fade-back-in duration
+
+  let wheelLocked = false;
+  window.addEventListener('wheel', (e) => {
+    if (wheelLocked) return;
+    if (e.deltaY > 12 && state === 'idle') {
+      wheelLocked = true;
+      openMenu();
+      setTimeout(() => { wheelLocked = false; }, totalMs + 400);
+    } else if (e.deltaY < -12 && state === 'menu') {
+      wheelLocked = true;
+      closeMenu();
+      setTimeout(() => { wheelLocked = false; }, CLOSE_MS);
+    }
+  }, { passive: true });
+
+  document.getElementById('backBtn').addEventListener('click', closeMenu);
 </script>
 </body>
 </html>
