@@ -1,0 +1,511 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Хочу поесть — каталог заведений Краснодара (MVP)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=PT+Sans:wght@400;700&family=PT+Mono:wght@400;700&family=Marck+Script&display=swap');
+
+  :root {
+    --paper: #ede6d8;
+    --paper-raised: #f6f2e8;
+    --paper-sunk: #e2d9c6;
+    --ink: #26211a;
+    --ink-soft: #5b5346;
+    --ink-faint: #837a68;
+    --line: rgba(38,33,26,0.18);
+    --line-strong: rgba(38,33,26,0.34);
+    --accent: #c85a24;
+    --accent-deep: #96431b;
+    --accent-soft: rgba(200,90,36,0.13);
+    --teal: #1f4a47;
+    --teal-soft: rgba(31,74,71,0.10);
+    --shadow: 0 1px 0 rgba(38,33,26,0.06), 0 10px 22px -14px rgba(38,33,26,0.30);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #1b1611; --paper-raised: #241d16; --paper-sunk: #14100c;
+      --ink: #ede6d8; --ink-soft: #c7bda8; --ink-faint: #8f8570;
+      --line: rgba(237,230,216,0.15); --line-strong: rgba(237,230,216,0.28);
+      --accent: #e07d3f; --accent-deep: #f0a06a; --accent-soft: rgba(224,125,63,0.16);
+      --teal: #5aada6; --teal-soft: rgba(90,173,166,0.14);
+      --shadow: 0 1px 0 rgba(0,0,0,0.4), 0 12px 26px -14px rgba(0,0,0,0.55);
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #1b1611; --paper-raised: #241d16; --paper-sunk: #14100c;
+    --ink: #ede6d8; --ink-soft: #c7bda8; --ink-faint: #8f8570;
+    --line: rgba(237,230,216,0.15); --line-strong: rgba(237,230,216,0.28);
+    --accent: #e07d3f; --accent-deep: #f0a06a; --accent-soft: rgba(224,125,63,0.16);
+    --teal: #5aada6; --teal-soft: rgba(90,173,166,0.14);
+    --shadow: 0 1px 0 rgba(0,0,0,0.4), 0 12px 26px -14px rgba(0,0,0,0.55);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { position: relative; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: 'PT Sans', Arial, sans-serif; font-size: 16px; line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  body::before {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 50;
+    opacity: 0.05; mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .mono { font-family: 'PT Mono', ui-monospace, monospace; }
+  .script { font-family: 'Marck Script', cursive; }
+  h1, h2, h3 { font-family: 'Oswald', sans-serif; text-wrap: balance; margin: 0; }
+
+  /* ---------- masthead ---------- */
+  header.masthead {
+    border-bottom: 3px double var(--line-strong);
+    padding: 22px 20px 26px;
+  }
+  .masthead-inner { max-width: 1180px; margin: 0 auto; }
+  .eyebrow-row {
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px 18px;
+    font-family: 'PT Mono', monospace; font-size: 11.5px; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--ink-faint); margin-bottom: 18px;
+    padding-bottom: 14px; border-bottom: 1px solid var(--line);
+  }
+  .eyebrow-row span b { color: var(--teal); }
+  .wordmark-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+  .wordmark {
+    font-size: clamp(44px, 9vw, 92px); font-weight: 700; text-transform: uppercase;
+    letter-spacing: -0.01em; line-height: 0.92; color: var(--ink);
+  }
+  .wordmark span { color: var(--accent); }
+  .corner-label {
+    font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: 0.05em;
+    text-transform: uppercase; color: var(--teal); text-align: right; white-space: nowrap;
+    padding-bottom: 8px;
+  }
+  .tagline {
+    font-size: 17px; color: var(--ink-soft); max-width: 46ch; margin-top: 10px;
+    font-style: italic;
+  }
+  .cta-row {
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px 20px;
+    margin-top: 20px; padding-top: 14px; border-top: 1px solid var(--line);
+    font-family: 'PT Mono', monospace; font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase;
+  }
+  .cta-row .l { color: var(--accent); }
+  .cta-row .r { color: var(--ink-faint); }
+
+  /* ---------- layout ---------- */
+  .shell { max-width: 1180px; margin: 0 auto; padding: 30px 20px 90px; position: relative; z-index: 1; }
+  .layout { display: grid; grid-template-columns: 270px minmax(0,1fr); gap: 30px; align-items: start; }
+  @media (max-width: 860px) { .layout { grid-template-columns: 1fr; } }
+
+  .facets {
+    position: sticky; top: 20px;
+    display: flex; flex-direction: column; gap: 20px;
+    background: var(--paper-raised); border: 1px solid var(--line-strong);
+    padding: 20px; max-height: calc(100vh - 40px); overflow-y: auto;
+  }
+  @media (max-width: 860px) { .facets { position: static; max-height: none; } }
+  .facets-title {
+    font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--ink); display: flex; align-items: center; gap: 8px; margin-bottom: 4px;
+    padding-bottom: 10px; border-bottom: 1px dashed var(--line-strong);
+  }
+  .facets-title::before { content: "§"; color: var(--accent); font-family: 'Oswald', sans-serif; }
+  .facet-group { display: flex; flex-direction: column; gap: 9px; }
+  .facet-label { font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); font-weight: 700; font-family: 'PT Mono', monospace; }
+  .chip-row { display: flex; flex-wrap: wrap; gap: 7px; }
+  .chip {
+    font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: 0.02em;
+    border: 1px dashed var(--line-strong); background: transparent;
+    color: var(--ink-soft); padding: 6px 11px; cursor: pointer; user-select: none;
+    transition: all .12s ease; text-transform: uppercase;
+  }
+  .chip:hover { border-color: var(--accent); color: var(--ink); border-style: solid; }
+  .chip.active { background: var(--accent); border-color: var(--accent); border-style: solid; color: var(--paper-raised); font-weight: 700; }
+  .reset-btn {
+    font-family: 'PT Mono', monospace; font-size: 11.5px; color: var(--teal);
+    background: none; border: none; cursor: pointer; text-align: left; padding: 0;
+    text-decoration: underline; text-underline-offset: 3px; text-transform: uppercase; letter-spacing: 0.04em;
+  }
+
+  .results-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 20px; gap: 12px; flex-wrap: wrap; }
+  .count { font-family: 'PT Mono', monospace; font-size: 12.5px; color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.04em; }
+  .count b { color: var(--accent); font-size: 15px; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+
+  .entry {
+    background: var(--paper-raised); border: 1px solid var(--line-strong);
+    padding: 18px 20px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 9px;
+    position: relative;
+  }
+  .entry-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+  .entry-num { font-family: 'PT Mono', monospace; font-size: 11px; color: var(--ink-faint); }
+  .entry h3 { font-size: 19px; font-weight: 600; color: var(--ink); line-height: 1.2; margin-top: 2px; }
+  .badge-award {
+    font-family: 'PT Mono', monospace; font-size: 10px; color: var(--teal);
+    border: 1px solid var(--teal); padding: 3px 7px;
+    white-space: nowrap; font-weight: 700; text-transform: uppercase;
+    transform: rotate(-2deg); flex-shrink: 0;
+  }
+  .entry .cuisine { font-size: 13px; color: var(--accent-deep); font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; }
+  .entry .addr, .entry .price { font-family: 'PT Mono', monospace; font-size: 12px; color: var(--ink-faint); }
+  .tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+  .tag {
+    font-family: 'PT Mono', monospace; font-size: 10.5px; color: var(--ink-soft);
+    border: 1px solid var(--line-strong); padding: 3px 8px; text-transform: uppercase;
+  }
+  .tag.diet { color: var(--teal); border-color: var(--teal); background: var(--teal-soft); }
+  .entry a.map-link {
+    font-size: 12.5px; margin-top: 6px; color: var(--accent-deep); text-decoration-color: var(--line-strong);
+    text-underline-offset: 3px; font-family: 'PT Mono', monospace; text-transform: uppercase; letter-spacing: 0.03em;
+  }
+
+  .empty { padding: 50px 20px; text-align: center; color: var(--ink-faint); font-family: 'Marck Script', cursive; font-size: 22px; }
+
+  footer.note {
+    max-width: 1180px; margin: 50px auto 0; padding: 24px 20px 0; font-size: 12.5px;
+    color: var(--ink-faint); border-top: 1px dashed var(--line-strong); font-family: 'PT Mono', monospace;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .barcode { display: flex; gap: 2px; align-items: flex-end; height: 26px; opacity: 0.5; }
+  .barcode i { display: block; background: var(--ink); width: 2px; }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead-inner">
+    <div class="eyebrow-row">
+      <span>Полевые заметки <b>·</b> Краснодар</span>
+      <span>Выпуск 01 <b>·</b> 15 мест <b>·</b> 21.08.2026</span>
+    </div>
+    <div class="wordmark-row">
+      <h1 class="wordmark">Хочу <span>поесть</span></h1>
+      <div class="corner-label">не список<br>всех подряд</div>
+    </div>
+    <p class="tagline">Точный подбор заведения под то, что вам нужно сейчас — кухня, бюджет, атмосфера и мелочи вроде веранды или детской зоны, которые обычно нигде не спросишь разом.</p>
+    <div class="cta-row">
+      <span class="l">↓ выбрать фильтр</span>
+      <span class="r">Краснодар · черновик проекта</span>
+    </div>
+  </div>
+</header>
+
+<div class="shell">
+  <div class="layout">
+
+    <aside class="facets">
+      <div class="facets-title">Фильтры</div>
+      <div class="facet-group">
+        <span class="facet-label">Кухня</span>
+        <div class="chip-row" data-facet="cuisine"></div>
+      </div>
+      <div class="facet-group">
+        <span class="facet-label">Бюджет на человека</span>
+        <div class="chip-row" data-facet="price"></div>
+      </div>
+      <div class="facet-group">
+        <span class="facet-label">Диета и меню</span>
+        <div class="chip-row" data-facet="diet"></div>
+      </div>
+      <div class="facet-group">
+        <span class="facet-label">Атмосфера</span>
+        <div class="chip-row" data-facet="atmosphere"></div>
+      </div>
+      <div class="facet-group">
+        <span class="facet-label">Практично</span>
+        <div class="chip-row" data-facet="practical"></div>
+      </div>
+      <button class="reset-btn" id="resetBtn">✕ сбросить всё</button>
+    </aside>
+
+    <main>
+      <div class="results-head">
+        <span class="count" id="count"></span>
+      </div>
+      <div class="grid" id="grid"></div>
+      <div class="empty" id="empty" style="display:none">пусто — снимите пару фильтров</div>
+    </main>
+
+  </div>
+
+  <footer class="note">
+    <div class="barcode" aria-hidden="true">
+      <i style="height:100%"></i><i style="height:60%"></i><i style="height:90%"></i><i style="height:40%"></i><i style="height:100%"></i><i style="height:70%"></i><i style="height:50%"></i><i style="height:100%"></i><i style="height:30%"></i><i style="height:80%"></i><i style="height:60%"></i><i style="height:100%"></i><i style="height:45%"></i><i style="height:90%"></i><i style="height:65%"></i>
+    </div>
+    <div>Данные собраны вручную из открытых карточек 2ГИС / Zoon / Flamp на 21.08.2026 — адреса и чек проверены по источникам, часть тегов (веранда / веган-меню / живая музыка / дог-френдли) требует личной проверки на месте перед публикацией. У части заведений чек не подтверждён — они показываются вне фильтра по бюджету. Фотографий заведений пока нет — нет прав использовать чужие снимки без согласования.</div>
+  </footer>
+</div>
+
+<script>
+  const venues = [
+    {
+      name: "Томми Lee",
+      cuisine: "Паназиатская",
+      addr: "Кубанская набережная, 1",
+      price: "₽₽₽ 2000+",
+      priceKey: "3",
+      diet: ["Веган/вег-меню", "Детское меню"],
+      atmosphere: ["Летняя веранда"],
+      practical: ["Wi-Fi"],
+      mapUrl: "https://2gis.ru/krasnodar/firm/3237491513433584",
+      award: false
+    },
+    {
+      name: "Хаяо · Унесённые Азией",
+      cuisine: "Паназиатская / Японская",
+      addr: "ул. Красная, 176/7",
+      price: "₽₽ 1000–3000",
+      priceKey: "2",
+      diet: [],
+      atmosphere: ["Тематический интерьер"],
+      practical: [],
+      mapUrl: "https://2gis.ru/krasnodar/firm/70000001069229613",
+      award: false
+    },
+    {
+      name: "Сыроварня",
+      cuisine: "Итальянская",
+      addr: "ул. Красная, 60",
+      price: "₽₽₽ 1700–3000",
+      priceKey: "3",
+      diet: [],
+      atmosphere: [],
+      practical: [],
+      mapUrl: "https://2gis.ru/krasnodar/firm/70000001046694567",
+      award: false
+    },
+    {
+      name: "Дон Базилио",
+      cuisine: "Итальянская (пицца)",
+      addr: "ТЦ Сити Центр, ул. Индустриальная, 2",
+      price: "₽ ~1000",
+      priceKey: "1",
+      diet: [],
+      atmosphere: [],
+      practical: ["Банкеты"],
+      mapUrl: "https://otdih.nakubani.ru/trattoria-don-bazilio/",
+      award: false
+    },
+    {
+      name: "Джимми Чу",
+      cuisine: "Паназиатская",
+      addr: "ул. Дальняя, 8к1",
+      price: "₽₽ 1000–3000",
+      priceKey: "2",
+      diet: [],
+      atmosphere: ["Летняя веранда"],
+      practical: ["Банкеты"],
+      mapUrl: "https://2gis.ru/krasnodar/firm/70000001037464303",
+      award: false
+    },
+    {
+      name: "Кубана Тоскана",
+      cuisine: "Итальянская (пицца)",
+      addr: "ул. Пашковская, 84",
+      price: "₽₽ 1000–3000",
+      priceKey: "2",
+      diet: [],
+      atmosphere: [],
+      practical: ["Парковка", "Доставка"],
+      mapUrl: "https://2gis.ru/krasnodar/firm/70000001054595057",
+      award: false
+    },
+    {
+      name: "Птичка-Невеличка",
+      cuisine: "Паназиатская / Европейская",
+      addr: "Александровский бульвар, ул. Красная, 133а",
+      price: "₽₽ —",
+      priceKey: "2",
+      diet: [],
+      atmosphere: ["Летняя веранда", "Живая музыка"],
+      practical: ["Детская зона"],
+      mapUrl: "https://2gis.ru/krasnodar/firm/70000001042220480",
+      award: "Лучший ресторан 2023"
+    },
+    {
+      name: "Дэда",
+      cuisine: "Грузинская",
+      addr: "ул. Яна Полуяна, 47/2",
+      price: "₽₽₽ 2000",
+      priceKey: "3",
+      diet: ["Веган/вег-меню", "Детское меню"],
+      atmosphere: ["VIP-зал", "Летняя веранда"],
+      practical: [],
+      mapUrl: "https://2gis.ru/krasnodar/firm/70000001056679323",
+      award: "Лучший ресторан 2022"
+    },
+    {
+      name: "La Кабанья",
+      cuisine: "Ливанская / Арабская",
+      addr: "Кубанская набережная, 39/1",
+      price: "₽₽ 1000–3000",
+      priceKey: "2",
+      diet: [],
+      atmosphere: [],
+      practical: ["Дог-френдли"],
+      mapUrl: "https://2gis.ru/krasnodar/firm/3237490513156802",
+      award: false
+    },
+    {
+      name: "Пицц'н'ролл",
+      cuisine: "Паназиатская / Итальянская",
+      addr: "ул. им. Байбакова Н.К., 14",
+      price: "₽ ~1000",
+      priceKey: "1",
+      diet: [],
+      atmosphere: [],
+      practical: ["Дог-френдли"],
+      mapUrl: "https://ugosti.com/pizznroll",
+      award: false
+    },
+    {
+      name: "Хмельной Повар",
+      cuisine: "Паназиатская / Итальянская (гастробар)",
+      addr: "ул. Невкипелого, 21/3",
+      price: "₽₽ 1100, ланч от 410",
+      priceKey: "2",
+      diet: [],
+      atmosphere: [],
+      practical: ["Дог-френдли", "Бизнес-ланч"],
+      mapUrl: "https://2gis.ru/krasnodar/firm/70000001057850128",
+      award: false
+    },
+    {
+      name: "Диканька",
+      cuisine: "Русская / Кубанская",
+      addr: "ул. Промышленная, 21/1",
+      price: null,
+      priceKey: null,
+      diet: ["Детское меню"],
+      atmosphere: [],
+      practical: ["Детская зона"],
+      mapUrl: "https://2gis.ru/krasnodar/firm/3237490513228586",
+      award: false
+    },
+    {
+      name: "Сельдерей",
+      cuisine: "Здоровое питание / Боулы",
+      addr: "ул. Аэродромная, 4 (БЦ Патриот)",
+      price: "₽ ~950",
+      priceKey: "1",
+      diet: [],
+      atmosphere: [],
+      practical: ["Бизнес-ланч"],
+      mapUrl: "https://2gis.ru/krasnodar/firm/70000001045155760",
+      award: false
+    },
+    {
+      name: "Анор-Анор",
+      cuisine: "Узбекская / Восточная (чайхана)",
+      addr: "ул. Российская, 286/1",
+      price: "₽ ~750",
+      priceKey: "1",
+      diet: ["Халяль"],
+      atmosphere: ["Летняя веранда"],
+      practical: ["Круглосуточно", "Детская зона", "Банкеты"],
+      mapUrl: "https://2gis.ru/krasnodar/firm/70000001048552469",
+      award: false
+    },
+    {
+      name: "Стейк Хаус",
+      cuisine: "Стейки / Грузинская / Европейская",
+      addr: "ул. Октябрьская, 27/1",
+      price: "₽₽ 1000–1700",
+      priceKey: "2",
+      diet: [],
+      atmosphere: ["Терраса с видом"],
+      practical: [],
+      mapUrl: "https://www.restoclub.ru/krd/place/stejk-haus-2",
+      award: false
+    }
+  ];
+
+  const priceLabels = { "1": "₽ до 1200", "2": "₽₽ 1200–2000", "3": "₽₽₽ 2000+" };
+  const facetKeys = ["cuisine", "price", "diet", "atmosphere", "practical"];
+  const state = { cuisine: new Set(), price: new Set(), diet: new Set(), atmosphere: new Set(), practical: new Set() };
+
+  function uniqueSorted(arr) { return [...new Set(arr)].sort((a,b)=>a.localeCompare(b,'ru')); }
+
+  function buildFacets() {
+    renderChipRow("cuisine", uniqueSorted(venues.map(v => v.cuisine)), v => v);
+    renderChipRow("price", ["1","2","3"], v => priceLabels[v]);
+    renderChipRow("diet", uniqueSorted(venues.flatMap(v => v.diet)), v => v);
+    renderChipRow("atmosphere", uniqueSorted(venues.flatMap(v => v.atmosphere)), v => v);
+    renderChipRow("practical", uniqueSorted(venues.flatMap(v => v.practical)), v => v);
+  }
+
+  function renderChipRow(facetKey, values, labelFn) {
+    const row = document.querySelector(`.chip-row[data-facet="${facetKey}"]`);
+    row.innerHTML = "";
+    values.forEach(val => {
+      const chip = document.createElement("button");
+      chip.className = "chip";
+      chip.type = "button";
+      chip.textContent = labelFn(val);
+      chip.addEventListener("click", () => {
+        if (state[facetKey].has(val)) state[facetKey].delete(val);
+        else state[facetKey].add(val);
+        chip.classList.toggle("active");
+        render();
+      });
+      row.appendChild(chip);
+    });
+  }
+
+  function matches(v) {
+    if (state.cuisine.size && !state.cuisine.has(v.cuisine)) return false;
+    if (state.price.size && v.priceKey && !state.price.has(v.priceKey)) return false;
+    for (const f of state.diet) if (!v.diet.includes(f)) return false;
+    for (const f of state.atmosphere) if (!v.atmosphere.includes(f)) return false;
+    for (const f of state.practical) if (!v.practical.includes(f)) return false;
+    return true;
+  }
+
+  function render() {
+    const filtered = venues.filter(matches);
+    const grid = document.getElementById("grid");
+    const empty = document.getElementById("empty");
+    const count = document.getElementById("count");
+    count.innerHTML = `Найдено: <b>${filtered.length}</b> из ${venues.length}`;
+    grid.innerHTML = "";
+    empty.style.display = filtered.length ? "none" : "block";
+    filtered.forEach((v, i) => {
+      const card = document.createElement("div");
+      card.className = "entry";
+      const allTags = [
+        ...v.diet.map(t => `<span class="tag diet">${t}</span>`),
+        ...v.atmosphere.map(t => `<span class="tag">${t}</span>`),
+        ...v.practical.map(t => `<span class="tag">${t}</span>`)
+      ].join("");
+      card.innerHTML = `
+        <div class="entry-head">
+          <div>
+            <div class="entry-num">№ ${String(i + 1).padStart(2, "0")}</div>
+            <h3>${v.name}</h3>
+          </div>
+          ${v.award ? `<span class="badge-award">${v.award}</span>` : ""}
+        </div>
+        <div class="cuisine">${v.cuisine}</div>
+        <div class="addr">${v.addr}</div>
+        <div class="price">${v.price || "чек уточняется"}</div>
+        <div class="tag-row">${allTags}</div>
+        <a class="map-link" href="${v.mapUrl}" target="_blank" rel="noopener">Подробнее →</a>
+      `;
+      grid.appendChild(card);
+    });
+  }
+
+  document.getElementById("resetBtn").addEventListener("click", () => {
+    facetKeys.forEach(k => state[k].clear());
+    document.querySelectorAll(".chip.active").forEach(c => c.classList.remove("active"));
+    render();
+  });
+
+  buildFacets();
+  render();
+</script>
+</body>
+</html>
