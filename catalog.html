@@ -240,188 +240,11 @@
 </div>
 
 <script>
-  const venues = [
-    {
-      name: "Томми Lee",
-      cuisine: "Паназиатская",
-      addr: "Кубанская набережная, 1",
-      price: "₽₽₽ 2000+",
-      priceKey: "3",
-      diet: ["Веган/вег-меню", "Детское меню"],
-      atmosphere: ["Летняя веранда"],
-      practical: ["Wi-Fi"],
-      mapUrl: "https://2gis.ru/krasnodar/firm/3237491513433584",
-      award: false
-    },
-    {
-      name: "Хаяо · Унесённые Азией",
-      cuisine: "Паназиатская / Японская",
-      addr: "ул. Красная, 176/7",
-      price: "₽₽ 1000–3000",
-      priceKey: "2",
-      diet: [],
-      atmosphere: ["Тематический интерьер"],
-      practical: [],
-      mapUrl: "https://2gis.ru/krasnodar/firm/70000001069229613",
-      award: false
-    },
-    {
-      name: "Сыроварня",
-      cuisine: "Итальянская",
-      addr: "ул. Красная, 60",
-      price: "₽₽₽ 1700–3000",
-      priceKey: "3",
-      diet: [],
-      atmosphere: [],
-      practical: [],
-      mapUrl: "https://2gis.ru/krasnodar/firm/70000001046694567",
-      award: false
-    },
-    {
-      name: "Дон Базилио",
-      cuisine: "Итальянская (пицца)",
-      addr: "ТЦ Сити Центр, ул. Индустриальная, 2",
-      price: "₽ ~1000",
-      priceKey: "1",
-      diet: [],
-      atmosphere: [],
-      practical: ["Банкеты"],
-      mapUrl: "https://otdih.nakubani.ru/trattoria-don-bazilio/",
-      award: false
-    },
-    {
-      name: "Джимми Чу",
-      cuisine: "Паназиатская",
-      addr: "ул. Дальняя, 8к1",
-      price: "₽₽ 1000–3000",
-      priceKey: "2",
-      diet: [],
-      atmosphere: ["Летняя веранда"],
-      practical: ["Банкеты"],
-      mapUrl: "https://2gis.ru/krasnodar/firm/70000001037464303",
-      award: false
-    },
-    {
-      name: "Кубана Тоскана",
-      cuisine: "Итальянская (пицца)",
-      addr: "ул. Пашковская, 84",
-      price: "₽₽ 1000–3000",
-      priceKey: "2",
-      diet: [],
-      atmosphere: [],
-      practical: ["Парковка", "Доставка"],
-      mapUrl: "https://2gis.ru/krasnodar/firm/70000001054595057",
-      award: false
-    },
-    {
-      name: "Птичка-Невеличка",
-      cuisine: "Паназиатская / Европейская",
-      addr: "Александровский бульвар, ул. Красная, 133а",
-      price: "₽₽ —",
-      priceKey: "2",
-      diet: [],
-      atmosphere: ["Летняя веранда", "Живая музыка"],
-      practical: ["Детская зона"],
-      mapUrl: "https://2gis.ru/krasnodar/firm/70000001042220480",
-      award: "Лучший ресторан 2023"
-    },
-    {
-      name: "Дэда",
-      cuisine: "Грузинская",
-      addr: "ул. Яна Полуяна, 47/2",
-      price: "₽₽₽ 2000",
-      priceKey: "3",
-      diet: ["Веган/вег-меню", "Детское меню"],
-      atmosphere: ["VIP-зал", "Летняя веранда"],
-      practical: [],
-      mapUrl: "https://2gis.ru/krasnodar/firm/70000001056679323",
-      award: "Лучший ресторан 2022"
-    },
-    {
-      name: "La Кабанья",
-      cuisine: "Ливанская / Арабская",
-      addr: "Кубанская набережная, 39/1",
-      price: "₽₽ 1000–3000",
-      priceKey: "2",
-      diet: [],
-      atmosphere: [],
-      practical: ["Дог-френдли"],
-      mapUrl: "https://2gis.ru/krasnodar/firm/3237490513156802",
-      award: false
-    },
-    {
-      name: "Пицц'н'ролл",
-      cuisine: "Паназиатская / Итальянская",
-      addr: "ул. им. Байбакова Н.К., 14",
-      price: "₽ ~1000",
-      priceKey: "1",
-      diet: [],
-      atmosphere: [],
-      practical: ["Дог-френдли"],
-      mapUrl: "https://ugosti.com/pizznroll",
-      award: false
-    },
-    {
-      name: "Хмельной Повар",
-      cuisine: "Паназиатская / Итальянская (гастробар)",
-      addr: "ул. Невкипелого, 21/3",
-      price: "₽₽ 1100, ланч от 410",
-      priceKey: "2",
-      diet: [],
-      atmosphere: [],
-      practical: ["Дог-френдли", "Бизнес-ланч"],
-      mapUrl: "https://2gis.ru/krasnodar/firm/70000001057850128",
-      award: false
-    },
-    {
-      name: "Диканька",
-      cuisine: "Русская / Кубанская",
-      addr: "ул. Промышленная, 21/1",
-      price: null,
-      priceKey: null,
-      diet: ["Детское меню"],
-      atmosphere: [],
-      practical: ["Детская зона"],
-      mapUrl: "https://2gis.ru/krasnodar/firm/3237490513228586",
-      award: false
-    },
-    {
-      name: "Сельдерей",
-      cuisine: "Здоровое питание / Боулы",
-      addr: "ул. Аэродромная, 4 (БЦ Патриот)",
-      price: "₽ ~950",
-      priceKey: "1",
-      diet: [],
-      atmosphere: [],
-      practical: ["Бизнес-ланч"],
-      mapUrl: "https://2gis.ru/krasnodar/firm/70000001045155760",
-      award: false
-    },
-    {
-      name: "Анор-Анор",
-      cuisine: "Узбекская / Восточная (чайхана)",
-      addr: "ул. Российская, 286/1",
-      price: "₽ ~750",
-      priceKey: "1",
-      diet: ["Халяль"],
-      atmosphere: ["Летняя веранда"],
-      practical: ["Круглосуточно", "Детская зона", "Банкеты"],
-      mapUrl: "https://2gis.ru/krasnodar/firm/70000001048552469",
-      award: false
-    },
-    {
-      name: "Стейк Хаус",
-      cuisine: "Стейки / Грузинская / Европейская",
-      addr: "ул. Октябрьская, 27/1",
-      price: "₽₽ 1000–1700",
-      priceKey: "2",
-      diet: [],
-      atmosphere: ["Терраса с видом"],
-      practical: [],
-      mapUrl: "https://www.restoclub.ru/krd/place/stejk-haus-2",
-      award: false
-    }
-  ];
+  // Данные заведений живут отдельно от разметки/логики — в data/venues.json.
+  // Каталог их только запрашивает и рендерит; чтобы добавить/поправить заведение,
+  // правится json, а не этот файл. При 100+ заведениях это станет либо CMS, либо
+  // настоящим бэкендом с API того же формата — сам fetch менять не придётся.
+  let venues = [];
 
   const priceLabels = { "1": "₽ до 1200", "2": "₽₽ 1200–2000", "3": "₽₽₽ 2000+" };
   const facetKeys = ["cuisine", "price", "diet", "atmosphere", "practical"];
@@ -504,8 +327,22 @@
     render();
   });
 
-  buildFacets();
-  render();
+  fetch("data/venues.json")
+    .then(res => {
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      return res.json();
+    })
+    .then(data => {
+      venues = data;
+      buildFacets();
+      render();
+    })
+    .catch(err => {
+      document.getElementById("grid").innerHTML = "";
+      document.getElementById("empty").style.display = "block";
+      document.getElementById("empty").textContent = "Не удалось загрузить список заведений — попробуйте обновить страницу";
+      console.error("[venues]", err);
+    });
 </script>
 </body>
 </html>
