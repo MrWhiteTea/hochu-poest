@@ -141,7 +141,9 @@
     --accent-soft: rgba(217,154,58,0.14);
     --accent-line: rgba(217,154,58,0.45);
   }
-  .a-col-bg { position: absolute; inset: 0; background: var(--sw-color, var(--paper-3)); opacity: 0.55; }
+  .a-col-bg { position: absolute; inset: 0; background: var(--sw-color, var(--paper-3)); }
+  .a-col-bg img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.55; filter: saturate(0.75) brightness(0.62); transition: opacity .5s ease, filter .5s ease; }
+  .a-col.on .a-col-bg img { opacity: 1; filter: saturate(0.85) brightness(0.78); }
   .a-detail { max-height: 0; opacity: 0; overflow: hidden; transition: max-height .4s ease .1s, opacity .3s ease .1s; }
   .a-col.on .a-detail { max-height: 60px; opacity: 1; }
   .a-cta {
@@ -210,7 +212,7 @@
   <div class="accordion" id="accordion">
 
     <div class="a-col on" data-col="1" data-key="kavkaz" style="--sw-color:#5a2317">
-      <div class="a-col-bg"></div>
+      <div class="a-col-bg"><img src="assets/cuisines/kavkaz.jpg" alt="Кавказская кухня"></div>
       <div class="a-inner">
         <div class="a-idx">01</div>
         <div class="a-bottom">
@@ -222,7 +224,7 @@
     </div>
 
     <div class="a-col" data-col="2" data-key="russian" style="--sw-color:#2c3a24">
-      <div class="a-col-bg"></div>
+      <div class="a-col-bg"><img src="assets/cuisines/russian.jpg" alt="Русская кухня"></div>
       <div class="a-inner">
         <div class="a-idx">02</div>
         <div class="a-bottom">
@@ -234,7 +236,7 @@
     </div>
 
     <div class="a-col" data-col="3" data-key="panasian" style="--sw-color:#8a1f2b">
-      <div class="a-col-bg"></div>
+      <div class="a-col-bg"><img src="assets/cuisines/panasian.jpg" alt="Паназиатская кухня"></div>
       <div class="a-inner">
         <div class="a-idx">03</div>
         <div class="a-bottom">
@@ -246,7 +248,7 @@
     </div>
 
     <div class="a-col" data-col="4" data-key="euro" style="--sw-color:#6b4a1e">
-      <div class="a-col-bg"></div>
+      <div class="a-col-bg"><img src="assets/cuisines/euro.jpg" alt="Европейская кухня"></div>
       <div class="a-inner">
         <div class="a-idx">04</div>
         <div class="a-bottom">
@@ -258,7 +260,7 @@
     </div>
 
     <div class="a-col" data-col="5" data-key="vostok" style="--sw-color:#9a6a1f">
-      <div class="a-col-bg"></div>
+      <div class="a-col-bg"><img src="assets/cuisines/vostok.jpg" alt="Восточная кухня"></div>
       <div class="a-inner">
         <div class="a-idx">05</div>
         <div class="a-bottom">
@@ -270,7 +272,7 @@
     </div>
 
     <div class="a-col" data-col="6" data-key="georgia" style="--sw-color:#7a1f1f">
-      <div class="a-col-bg"></div>
+      <div class="a-col-bg"><img src="assets/cuisines/georgia.jpg" alt="Грузинская кухня"></div>
       <div class="a-inner">
         <div class="a-idx">06</div>
         <div class="a-bottom">
@@ -282,7 +284,7 @@
     </div>
 
     <div class="a-col" data-col="7" data-key="armenia" style="--sw-color:#8a3a1f">
-      <div class="a-col-bg"></div>
+      <div class="a-col-bg"><img src="assets/cuisines/armenia.jpg" alt="Армянская кухня"></div>
       <div class="a-inner">
         <div class="a-idx">07</div>
         <div class="a-bottom">
