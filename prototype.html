@@ -323,9 +323,12 @@
 
   // ---- cuisine cascade: уровень 2 (кухня) -> уровень 3 (тип) -> заведения ----
   const CUISINES = {
-    kavkaz:   { name: 'Кавказская',   count: 14, tier2: null },
-    russian:  { name: 'Русская',      count: 14, tier2: null },
+    kavkaz:   { name: 'Кавказская',   count: 14, tier2: null,
+      types: ['Кафе','Ресторан','Шашлычная','Банкетный зал'] },
+    russian:  { name: 'Русская',      count: 14, tier2: null,
+      types: ['Кафе','Ресторан','Пельменная','Блинная','Банкетный зал'] },
     panasian: { name: 'Паназиатская', count: 23,
+      types: ['Кафе','Ресторан','Бистро'],
       tier2: [
         { name: 'Микс (wok/роллы/том-ям)', n: 13 },
         { name: 'Японская', n: 4 },
@@ -346,12 +349,14 @@
         { name: 'Сычуань', type: 'Кафе' },
       ]},
     euro: { name: 'Европейская', count: 17,
+      types: ['Кафе','Ресторан','Пиццерия','Бистро'],
       tier2: [
         { name: 'Средиземноморская', n: 11 },
         { name: 'Континентальная', n: 6 },
       ],
       venues: [ { name: 'Eat Beat', type: 'Кафе' } ]},
     vostok: { name: 'Восточная', count: 14,
+      types: ['Кафе','Ресторан','Чайхана','Шашлычная'],
       tier2: [
         { name: 'Узбекская', n: 9 },
         { name: 'Дагестанско-чеченская халяль', n: 1 },
@@ -374,11 +379,11 @@
         { name: 'Стамбул', type: 'Кафе' },
         { name: 'БуузМэн', type: 'Кафе' },
       ]},
-    georgia: { name: 'Грузинская', count: 6, tier2: null },
-    armenia: { name: 'Армянская', count: 5, tier2: null },
+    georgia: { name: 'Грузинская', count: 6, tier2: null,
+      types: ['Кафе','Ресторан','Шашлычная','Банкетный зал'] },
+    armenia: { name: 'Армянская', count: 5, tier2: null,
+      types: ['Кафе','Ресторан','Шашлычная','Банкетный зал'] },
   };
-
-  const TYPE_FILTER = ['Кафе','Ресторан','Шашлычная','Пиццерия','Чайхана','Пельменная','Блинная','Бистро','Банкетный зал'];
 
   const cascade = document.getElementById('cascade');
   const cascadeInner = document.getElementById('cascadeInner');
@@ -424,7 +429,7 @@
             <button class="showall-btn" data-showall="1">Показать всё →</button>
           </div>
           <div class="chip-grid" id="typeGrid">
-            ${TYPE_FILTER.map((t, idx) => `<span class="chip" data-type="${t}" style="transition-delay:${idx*45}ms">${t}</span>`).join('')}
+            ${c.types.map((t, idx) => `<span class="chip" data-type="${t}" style="transition-delay:${idx*45}ms">${t}</span>`).join('')}
           </div>
         </div>
         <div class="step venues-step" data-step="venues" id="venuesStep" style="display:none;"></div>
@@ -464,13 +469,14 @@
   function revealTypeStep(key, skipAnim) {
     const typeStep = document.getElementById('typeStep');
     if (!typeStep) return;
+    const c = CUISINES[key];
     typeStep.innerHTML = `
       <div class="step-head">
         <div class="step-label"><span class="n">Уровень 3</span> · тип заведения</div>
         <button class="showall-btn" data-showall="1">Показать всё →</button>
       </div>
       <div class="chip-grid">
-        ${TYPE_FILTER.map((t, idx) => `<span class="chip${skipAnim ? ' picked' : ''}" data-type="${t}" style="transition-delay:${idx*45}ms">${t}</span>`).join('')}
+        ${c.types.map((t, idx) => `<span class="chip${skipAnim ? ' picked' : ''}" data-type="${t}" style="transition-delay:${idx*45}ms">${t}</span>`).join('')}
       </div>`;
     typeStep.style.display = 'block';
     requestAnimationFrame(() => {
