@@ -600,16 +600,19 @@
     document.querySelectorAll('.a-cta').forEach(b => b.classList.toggle('active', b.dataset.open === key));
     buildCascade(key);
     cascade.classList.add('open');
-    scrollToReveal(cascade);
+    scrollToReveal(cascade, 650); // wait for the .6s max-height transition to finish growing first
   }
 
   // ---- auto-scroll so newly revealed content is never missed below the fold ----
-  function scrollToReveal(el) {
+  // delay defaults to 60ms (just enough for display:block to take layout) - the
+  // cascade panel itself grows via a 0.6s max-height transition, so opening it
+  // needs to wait for that to finish first or the scroll target lands short.
+  function scrollToReveal(el, delay) {
     if (!el) return;
     requestAnimationFrame(() => {
       setTimeout(() => {
         el.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
-      }, 60);
+      }, delay ?? 60);
     });
   }
 
