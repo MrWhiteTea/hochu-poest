@@ -309,13 +309,6 @@
     <div class="cascade-inner" id="cascadeInner"></div>
   </div>
 
-
-  <div class="wipe-zone">
-    <div class="wipe-label">переход между состояниями — сплошная заливка (как в референсе)</div>
-    <button class="wipe-btn" onclick="document.getElementById('wc').classList.add('go'); setTimeout(()=>document.getElementById('wc').classList.remove('go'), 1300)">Показать переход</button>
-    <div class="wipe-curtain" id="wc"><span>Открываю каталог…</span></div>
-  </div>
-
 </div>
 
 <script>
@@ -374,7 +367,7 @@
         { name: 'Моя игра', type: 'Кафе', img: 'https://avatars.mds.yandex.net/get-altay/19847187/2a000001a090d7769bc09a177945129df399/L_height' },
         { name: 'The Печь', type: 'Кафе', img: 'https://avatars.mds.yandex.net/get-altay/1551063/2a0000016746cedd576989b59a8e499d16d3/L_height' },
         { name: 'Акватория', type: 'Ресторан' },
-        { name: 'МЯСО&РЫБА', type: 'Ресторан', img: 'https://avatars.mds.yandex.net/get-tycoon/17737608/28170613_drop_search_standard_2025-11-12T17_45_42/drop_x2' },
+        { name: 'МЯСО&РЫБА', type: 'Ресторан' },
         { name: 'Барин', type: 'Ресторан', img: 'https://avatars.mds.yandex.net/get-altay/2960979/2a00000171f3de4fd186692d4bd2e0cc13fe/M_height' },
         { name: 'Винология', type: 'Ресторан', img: 'https://avatars.mds.yandex.net/get-altay/12728107/2a0000019059f6dea2d2d3b9e38e535ae570/L_height' },
         { name: 'Esta noche', type: 'Ресторан' },
@@ -387,7 +380,7 @@
         { name: 'Чин-чинарём', type: 'Ресторан' },
         { name: 'Гоголь', type: 'Ресторан', img: 'https://avatars.mds.yandex.net/get-altay/15153151/2a000001949d7f6ea3717dc6d2f7b238f05a/M_height' },
         { name: 'Екатеринодар', type: 'Ресторан' },
-        { name: 'Партизан', type: 'Ресторан', img: 'https://avatars.mds.yandex.net/get-altay/20308240/2a000001a039f239a6de9e0ab04a760d8031/S_height' },
+        { name: 'Партизан', type: 'Ресторан' },
         { name: 'Большая рыба', type: 'Ресторан', img: 'https://avatars.mds.yandex.net/get-altay/7979597/2a0000018f6c8c909e063763c69d0896a5b8/L_height' },
         { name: 'Гранд Бистро', type: 'Бистро', img: 'https://avatars.mds.yandex.net/get-altay/15413593/2a00000197d2afeb3fc336b41ea9b4f553cf/L_height' },
         { name: 'Архитектор', type: 'Кафе', img: 'https://avatars.mds.yandex.net/get-altay/12810232/2a0000019197af92b764249004d5201aa613/L_height' },
@@ -401,11 +394,11 @@
     panasian: { name: 'Паназиатская', count: 38,
       types: ['Кафе','Ресторан','Бистро'],
       tier2: [
-        { name: 'Микс (wok/роллы/том-ям)', n: 13 },
-        { name: 'Японская', n: 4 },
-        { name: 'Корейская', n: 2 },
+        { name: 'Микс (wok/роллы/том-ям)', n: 21 },
+        { name: 'Японская', n: 7 },
+        { name: 'Корейская', n: 4 },
         { name: 'Вьетнамская', n: 2 },
-        { name: 'Китайская', n: 2 },
+        { name: 'Китайская', n: 4 },
       ],
       venues: [
         { name: 'Хаяо · Унесённые Азией', type: 'Кафе', img: 'https://avatars.mds.yandex.net/get-altay/903559/2a000001889f44e3820196feb6e510c696be/L_height' },
@@ -414,7 +407,7 @@
         { name: 'Clavis', type: 'Кафе', img: 'https://avatars.mds.yandex.net/get-altay/8377501/2a0000018de6983778e837f1dd207545df81/L_height' },
         { name: 'K-Pop', type: 'Кафе', img: 'https://avatars.mds.yandex.net/get-altay/14813057/2a0000019442a25ff0db3cd14d1a9bdb8a27/L_height' },
         { name: 'Korean House', type: 'Кафе', img: 'https://avatars.mds.yandex.net/get-altay/11302718/2a0000018fcccfe149cc212c37b73aa261d1/L_height' },
-        { name: 'PhoBo', type: 'Бистро', img: 'https://avatars.mds.yandex.net/get-altay/9847279/2a0000018e0ed3f79587a4b85b1ae5d98f56/M_height' },
+        { name: 'PhoBo', type: 'Бистро' },
         { name: 'ФоБо-ТомЯм', type: 'Кафе', img: 'https://avatars.mds.yandex.net/get-altay/16413163/2a0000019b8f2f15e1ffa66cf62b8ff23272/M_height' },
         { name: 'Пекин', type: 'Кафе', img: 'https://avatars.mds.yandex.net/get-altay/3629247/2a000001766c042881b2e0dd3c08b33f7062/L_height' },
         { name: 'Сычуань', type: 'Кафе', img: 'https://avatars.mds.yandex.net/get-altay/5232541/2a000001820c8f6d0291531c06806749b3a9/L_height' },
@@ -424,7 +417,7 @@
         { name: 'Шанхай', type: 'Ресторан', img: 'https://avatars.mds.yandex.net/get-altay/16166099/2a0000019a69f53ae054c674be3240febc0b/L_height' },
         { name: 'Du du / DuDu', type: 'Ресторан', img: 'https://avatars.mds.yandex.net/get-altay/5587131/2a00000181449011060bb496e23c01726851/L_height' },
         { name: 'Золотой Дракон КиКо', type: 'Ресторан', img: 'https://avatars.mds.yandex.net/get-altay/18748727/2a0000019ddd7d1c7ebdc44c092f4b0c4aa5/L_height' },
-        { name: 'Omo-Food! Korea-Good!', type: 'Ресторан', img: 'https://avatars.mds.yandex.net/get-altay/15712112/2a000001979c6d116e140a5ab8c7ae04500b/S_height' },
+        { name: 'Omo-Food! Korea-Good!', type: 'Ресторан' },
         { name: 'Кореана Light', type: 'Ресторан', img: 'https://avatars.mds.yandex.net/get-altay/19636095/2a0000019d05eb13a283435ba9a2cb860471/L_height' },
         { name: 'СушиВесла', type: 'Ресторан', img: 'https://avatars.mds.yandex.net/get-altay/13200126/2a00000194191d1538aaedd9bf47f928f4d8/M_height' },
         { name: '321 Club', type: 'Ресторан', img: 'https://avatars.mds.yandex.net/get-altay/20069562/2a000001a084d02c2a04fa7a81cfbf5e0f73/L_height' },
@@ -437,8 +430,8 @@
     euro: { name: 'Европейская', count: 91,
       types: ['Кафе','Ресторан','Пиццерия','Бистро'],
       tier2: [
-        { name: 'Средиземноморская', n: 11 },
-        { name: 'Континентальная', n: 6 },
+        { name: 'Средиземноморская', n: 34 },
+        { name: 'Континентальная', n: 57 },
       ],
       venues: [
         { name: 'Eat Beat', type: 'Кафе', img: 'https://avatars.mds.yandex.net/get-altay/21012689/2a000001a0958aa35a2999e4c9b6ad400290/L_height' },
@@ -455,7 +448,7 @@
         { name: 'Аристарх Периньон', type: 'Ресторан', img: 'https://avatars.mds.yandex.net/get-altay/5596516/2a00000180469b2182994e78b0818706b75c/L_height' },
         { name: 'Чайка Ливингстон', type: 'Ресторан', img: 'https://avatars.mds.yandex.net/get-altay/16617364/2a000001987b4024f74765d2098a47fc901e/L_height' },
         { name: 'Голый шеф', type: 'Ресторан', img: 'https://avatars.mds.yandex.net/get-altay/15395175/2a00000199c22b11a3a3887351691b3f3186/L_height' },
-        { name: 'Бериот', type: 'Ресторан', img: 'https://avatars.mds.yandex.net/get-altay/20242116/2a000001a05d07df27235714b9fdb099e7d3/S_height' },
+        { name: 'Бериот', type: 'Ресторан' },
         { name: 'Платформа', type: 'Кафе', img: 'https://avatars.mds.yandex.net/get-altay/13229524/2a0000018f1569e48e5f6396c9d4c12a9907/L_height' },
         { name: 'Градус вкуса ХП', type: 'Ресторан', img: 'https://avatars.mds.yandex.net/get-altay/20219917/2a0000019f47f1c957bff909c901a3fa2bd7/L_height' },
         { name: 'Don Bazilio', type: 'Ресторан', img: 'https://avatars.mds.yandex.net/get-eda/15475554/6f3f09a93b5615af98cbb71bb0b853dc/L_height' },
@@ -493,7 +486,7 @@
         { name: 'Сандуны', type: 'Ресторан', img: 'https://avatars.mds.yandex.net/get-altay/16270073/2a000001987f4f6200bff9aea58a5ca88537/M_height' },
         { name: 'Forum Plaza', type: 'Банкетный зал', img: 'https://avatars.mds.yandex.net/get-altay/933207/2a000001619b236090d3a745cf82042dec0b/M_height' },
         { name: 'Карат', type: 'Ресторан', img: 'https://avatars.mds.yandex.net/get-altay/15081387/2a00000195667250e4fad71d5f01d2349128/L_height' },
-        { name: 'Белладжио / Bellagio', type: 'Банкетный зал', img: 'https://avatars.mds.yandex.net/get-altay/2714499/2a00000174bf53693c79545d957620772413/S_height' },
+        { name: 'Белладжио / Bellagio', type: 'Банкетный зал' },
         { name: 'Wine&Vine', type: 'Ресторан', img: 'https://avatars.mds.yandex.net/get-altay/5479384/2a0000017d4c600214ef26ae500097fe3702/M_height' },
         { name: 'Атон', type: 'Ресторан', img: 'https://avatars.mds.yandex.net/get-altay/9793917/2a0000018a3d371d90677ad3ccf7ed2bedaf/M_height' },
         { name: 'Веранда', type: 'Кафе', img: 'https://avatars.mds.yandex.net/get-altay/16114102/2a0000019a40cf00dbb26c8771a9d3b15f15/L_height' },
@@ -520,10 +513,10 @@
     vostok: { name: 'Восточная', count: 20,
       types: ['Кафе','Ресторан','Чайхана','Шашлычная'],
       tier2: [
-        { name: 'Узбекская', n: 9 },
+        { name: 'Узбекская', n: 14 },
         { name: 'Дагестанско-чеченская халяль', n: 1 },
         { name: 'Арабско-ливанская халяль', n: 1 },
-        { name: 'Турецкая', n: 1 },
+        { name: 'Турецкая', n: 3 },
         { name: 'Буузная-бурятская', n: 1 },
       ],
       venues: [
@@ -540,10 +533,10 @@
         { name: 'Хумус grill', type: 'Кафе', img: 'https://avatars.mds.yandex.net/get-eda/3735503/f2788a2b35e44e9fb5cd8f7eab0ba0b0/L_height' },
         { name: 'Стамбул', type: 'Кафе', img: 'https://avatars.mds.yandex.net/get-altay/16465668/2a0000019a67e6aa69b93de6ef1414cbd16c/L_height' },
         { name: 'БуузМэн', type: 'Кафе', img: 'https://avatars.mds.yandex.net/get-altay/14396200/2a000001955ff25640bb244200d9d7a8ea88/L_height' },
-        { name: 'Теплые страны', type: 'Банкетный зал', img: 'https://avatars.mds.yandex.net/get-altay/10534734/2a000001912bc2a2bcbba44b9051cf6e41d2/L_height' },
+        { name: 'Теплые страны', type: 'Банкетный зал' },
         { name: 'Лала', type: 'Ресторан', img: 'https://avatars.mds.yandex.net/get-altay/20390960/2a000001a042979ba743fb2094a0c6dde07c/L_height' },
         { name: 'Ihsan', type: 'Ресторан', img: 'https://avatars.mds.yandex.net/get-altay/6119709/2a00000180428d434f4554cce2244fc6dbc0/L_height' },
-        { name: 'Альянс', type: 'Банкетный зал', img: 'https://avatars.mds.yandex.net/get-altay/15053227/2a00000195dc03bf4921fc033a3d6fbcdd5c/S_height' },
+        { name: 'Альянс', type: 'Банкетный зал' },
         { name: 'Золотая Бухара', type: 'Ресторан', img: 'https://avatars.mds.yandex.net/get-altay/216588/2a0000015b864549de8d6aa038625ac42856/L_height' },
         { name: 'Сабли-Зубы', type: 'Ресторан', img: 'https://avatars.mds.yandex.net/get-altay/16136444/2a0000019ad01894e95c33fd0237a03692a9/L_height' },
       ]},
@@ -574,7 +567,7 @@
         { name: 'Оджахури', type: 'Ресторан', img: 'https://avatars.mds.yandex.net/get-altay/16411237/2a0000019a268032c9f319ce66589ab39636/L_height' },
         { name: 'Чарули', type: 'Ресторан', img: 'https://avatars.mds.yandex.net/get-sprav-products/5560664/2a0000017f6e4ebde5c88eb2726beae708d9/L_height' },
         { name: 'Хачапури', type: 'Ресторан', img: 'https://avatars.mds.yandex.net/get-altay/11047134/2a0000018ead2d5db78a698e3994746f3329/L_height' },
-        { name: 'Харчо', type: 'Ресторан', img: 'https://avatars.mds.yandex.net/get-altay/15185043/2a00000194ad3291f6e5d31269a776e3d872/S_height' },
+        { name: 'Харчо', type: 'Ресторан' },
         { name: 'Арагви', type: 'Ресторан', img: 'https://avatars.mds.yandex.net/get-altay/11072941/2a0000018cbb13d2e7029047a8bc1e2c307e/L_height' },
         { name: 'Тбилиси', type: 'Кафе', img: 'https://avatars.mds.yandex.net/get-altay/16230048/2a000001972124dcb6175815695c21d2a07d/L_height' },
         { name: 'Не горюй!', type: 'Ресторан', img: 'https://avatars.mds.yandex.net/get-altay/14092818/2a00000193c7d39d3bcf3bda07a4c0e66974/L_height' },
