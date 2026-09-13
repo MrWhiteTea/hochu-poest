@@ -600,6 +600,17 @@
     document.querySelectorAll('.a-cta').forEach(b => b.classList.toggle('active', b.dataset.open === key));
     buildCascade(key);
     cascade.classList.add('open');
+    scrollToReveal(cascade);
+  }
+
+  // ---- auto-scroll so newly revealed content is never missed below the fold ----
+  function scrollToReveal(el) {
+    if (!el) return;
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+      }, 60);
+    });
   }
 
   function buildCascade(key) {
@@ -683,6 +694,7 @@
       typeStep.querySelectorAll('.chip').forEach(ch => requestAnimationFrame(() => ch.classList.add('in')));
     });
     wireCascadeEvents(key);
+    if (!skipAnim) scrollToReveal(typeStep);
   }
 
   function revealVenuesStep(key, pickedType, showAll) {
@@ -717,6 +729,7 @@
       venuesStep.classList.add('in');
       venuesStep.querySelectorAll('.venue-card').forEach(card => requestAnimationFrame(() => card.classList.add('in')));
     });
+    scrollToReveal(venuesStep);
   }
 
   document.querySelectorAll('.a-cta[data-open]').forEach(btn => {
