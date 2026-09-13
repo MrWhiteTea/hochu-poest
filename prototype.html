@@ -607,10 +607,33 @@
   // delay defaults to 60ms (just enough for display:block to take layout) - the
   // cascade panel itself grows via a 0.6s max-height transition, so opening it
   // needs to wait for that to finish first or the scroll target lands short.
+  function easeInOutCubic(t) { return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2, 3)/2; }
+
+  // custom-animated scroll (not the native scrollIntoView) so the speed/feel is
+  // ours to control - a fixed 900ms glide, not whatever the browser's own
+  // "smooth" happens to render as, which reads as an abrupt snap on some setups.
+  function smoothScrollTo(targetY, duration) {
+    duration = duration ?? 900;
+    const startY = window.scrollY;
+    const maxY = document.documentElement.scrollHeight - window.innerHeight;
+    const clampedTarget = Math.max(0, Math.min(targetY, maxY));
+    const diff = clampedTarget - startY;
+    if (Math.abs(diff) < 2) return;
+    const startTime = performance.now();
+    function step(now) {
+      const t = Math.min((now - startTime) / duration, 1);
+      window.scrollTo(0, startY + diff * easeInOutCubic(t));
+      if (t < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
   function scrollToReveal(el, delay) {
     if (!el) return;
     setTimeout(() => {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+      const rect = el.getBoundingClientRect();
+      const targetY = window.scrollY + rect.top - 16; // small breathing room above
+      smoothScrollTo(targetY);
     }, delay ?? 60);
   }
 
