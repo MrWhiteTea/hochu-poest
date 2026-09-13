@@ -609,11 +609,9 @@
   // needs to wait for that to finish first or the scroll target lands short.
   function scrollToReveal(el, delay) {
     if (!el) return;
-    requestAnimationFrame(() => {
-      setTimeout(() => {
-        el.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
-      }, delay ?? 60);
-    });
+    setTimeout(() => {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+    }, delay ?? 60);
   }
 
   function buildCascade(key) {
